@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>List of Posts</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block title %}List of Posts{% endblock %}
+
+{% block content %}
 <table>
     <tr>
         <th>Title</th>
@@ -14,21 +12,19 @@
         <th>Created_at</th>
         <th>Updated_at</th>
         <th>Status</th>
-        <th>Auther</th>
+        <th>Author</th>
     </tr>
-        {% for post in queryset %}
+    {% for post in queryset %}
     <tr>
-        <td>{{post.title}}</td>
-        <td>{{post.slug}}</td>
-        <td>{{post.body}}</td>
-        <td>{{post.published_at}}</td>
-        <td>{{post.created_at}}</td>
-        <td>{{post.updated_at}}</td>
-        <td>{{post.status}}</td>
-        <td>{{post.auther}}</td>
+        <td>{{ post.title }}</td>
+        <td>{{ post.slug }}</td>
+        <td>{{ post.body }}</td>
+        <td>{{ post.published_at }}</td>
+        <td>{{ post.created_at }}</td>
+        <td>{{ post.updated_at }}</td>
+        <td>{{ post.status }}</td>
+        <td>{{ post.author }}</td>
     </tr>
-        {% endfor %}
+    {% endfor %}
 </table>
-
-</body>
-</html>
+{% endblock %}
