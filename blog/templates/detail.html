@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}Post Details|{{ post.title }}{% endblock %}
+{% block title %}Post's title{% endblock %}
 
 {% block content %}
-<div>
-    <h1>{{post.title}}</h1>
-    <p>{{post.slug}}</p>
-    <p>{{post.body}}</p>
-    <p>{{post.published_at}}</p>
-    <p>{{post.created_at}}</p>
-    <p>{{post.updated_at}}</p>
-    <p>{{post.status}}</p>
-    <p>{{post.auther}}</p>
-</div>
+{% for post in posts %}
+    <h1>{{ post.title }}</h1>
+    <p class="date">Published {{ post.published_at|date:"M d, Y" }} by {{ post.author }}</p>
+    <p>{{ post.body|linebreaks }}</p>
+{% endfor %}
 {% endblock %}
