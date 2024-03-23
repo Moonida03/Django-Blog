@@ -1,30 +1,11 @@
 {% extends 'base.html' %}
 
-{% block title %}List of Posts{% endblock %}
+{% block title %}Posts{% endblock %}
 
 {% block content %}
-<table>
-    <tr>
-        <th>Title</th>
-        <th>Slug</th>
-        <th>Body</th>
-        <th>Published_at</th>
-        <th>Created_at</th>
-        <th>Updated_at</th>
-        <th>Status</th>
-        <th>Author</th>
-    </tr>
-    {% for post in queryset %}
-    <tr>
-        <td>{{ post.title }}</td>
-        <td>{{ post.slug }}</td>
-        <td>{{ post.body }}</td>
-        <td>{{ post.published_at }}</td>
-        <td>{{ post.created_at }}</td>
-        <td>{{ post.updated_at }}</td>
-        <td>{{ post.status }}</td>
-        <td>{{ post.author }}</td>
-    </tr>
-    {% endfor %}
-</table>
+{% for post in posts %}
+    <h2><a href="{{% url post_list %}}">{{ post.id }}</a></h2>
+    <p class="date">Published {{ post.published_at|date:"M d, Y" }} by {{ post.author }}</p>
+    <p>{{ post.body|truncatewords:30|linebreaks }}</p>
+{% endfor %}
 {% endblock %}
