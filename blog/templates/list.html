@@ -4,7 +4,7 @@
 
 {% block content %}
 {% for post in posts %}
-    <h2><a href="{{% url post_list %}}">{{ post.id }}</a></h2>
+    <h2><a href="{{ post.get_absolute_url }}">{{ post.id }}</a></h2>
     <p class="date">Published {{ post.published_at|date:"M d, Y" }} by {{ post.author }}</p>
     <p>{{ post.body|truncatewords:30|linebreaks }}</p>
 {% endfor %}
