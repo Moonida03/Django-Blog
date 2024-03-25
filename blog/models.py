@@ -15,7 +15,7 @@ class Post(models.Model):
         PUBLISHED = 'PB', 'Published'
 
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255)
+    slug = models.SlugField(max_length=255, unique_for_date='published_at')
     body = models.TextField()
     published_at = models.DateTimeField(default=timezone.now())
     created_at = models.DateTimeField(auto_now_add=True)
@@ -30,7 +30,10 @@ class Post(models.Model):
     published = PublishedManager()
 
     def get_absolute_url(self):
-        return reverse('post-detail', kwargs={'slug': self.slug})
+        return reverse('post-detail', args=[self.published_at.year,
+                                            self.published_at.month,
+                                            self.published_at.day,
+                                            self.slug])
 
     class Meta:
         ordering = ('-published_at', )
