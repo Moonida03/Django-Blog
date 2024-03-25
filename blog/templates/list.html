@@ -8,4 +8,6 @@
     <p class="date">Published {{ post.published_at|date:"M d, Y" }} by {{ post.author }}</p>
     <p>{{ post.body|truncatewords:30|linebreaks }}</p>
 {% endfor %}
+
+{% include 'pagination.html' %}
 {% endblock %}
