@@ -16,6 +16,6 @@ def show_latest_posts(count=5):
 
 @register.simple_tag
 def get_most_commented_posts(count=5):
-    # data = Post.published.all()[:count]
-    # return data
-    return Post.objects.filter(comments__active=True).annotate(total_comments=Count('comments')).order_by('-total_comments')[:count]
+    data = Post.objects.filter().annotate(total_comments=Count('comment')).order_by('-total_comments')[:count]
+    # print(data)
+    return data

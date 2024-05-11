@@ -1,0 +1,7 @@
+SELECT
+    "blog_post"."id", "blog_post"."title", "blog_post"."slug", "blog_post"."body", "blog_post"."published_at", "blog_post"."created_at", "blog_post"."updated_at", "blog_post"."status", "blog_post"."author_id"
+FROM
+    "blog_post"
+INNER JOIN
+    "blog_comment" ON ("blog_post"."id" = "blog_comment"."post_id")
+WHERE "blog_comment"."active" ORDER BY "blog_post"."published_at" DESC
