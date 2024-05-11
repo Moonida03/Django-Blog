@@ -24,7 +24,7 @@ class Post(models.Model):
     status = models.CharField(max_length=2,
                               choices=StatusChoices.choices,
                               default=StatusChoices.DRAFT)
-    auther = models.ForeignKey(User,
+    author = models.ForeignKey(User,
                                on_delete=models.CASCADE,
                                related_name='posts')
     objects = models.Manager()
@@ -32,7 +32,7 @@ class Post(models.Model):
     tags = TaggableManager()
 
     def get_absolute_url(self):
-        return reverse('post-detail', args=[self.published_at.year,
+        return reverse('post_detail', args=[self.published_at.year,
                                             self.published_at.month,
                                             self.published_at.day,
                                             self.slug])
@@ -46,8 +46,9 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(models.Model):
-    posts = models.ForeignKey('Post', on_delete=models.CASCADE)
+    post = models.ForeignKey('Post', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     email = models.EmailField()
     body = models.TextField()
@@ -62,4 +63,4 @@ class Comment(models.Model):
         ]
 
     def __str__(self):
-        return f'Comment by {self.name} on {self.posts}'
+        return f'Comment by {self.name} on {self.post}'

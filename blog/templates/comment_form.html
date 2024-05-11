@@ -1,8 +1,6 @@
-{% extends 'base.html' %}
-
 {% block content %}
 <h2>Add a new comment</h2>
-<form action="{% url 'blog:post_comment' post.id %}" method="post">
+<form action="{% url 'post_detail' post.published_at.year post.published_at.month post.published_at.day post.slug %}" method="post">
     {{ form.as_p }}
     {% csrf_token %}
     <p><input type="submit" value="Add comment"></p>

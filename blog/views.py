@@ -15,6 +15,7 @@ class PostListView(ListView):
     paginate_by = 3
     template_name = 'list.html'
 
+
 def post_list(request, tag_slug=None):
     posts = Post.objects.filter()
     tag = None
@@ -23,29 +24,29 @@ def post_list(request, tag_slug=None):
         posts = posts.filter(tags__in=[tag])
     return render(request, 'list.html', {'posts': posts, 'tag': tag})
 
-def post_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status='PB')
-    comments = post.comments.filter(active=True)
-    total_comments = post.comments.count()
-    new_comment = None
+
+def post_detail(request, year, month, day, slug):
+    post = get_object_or_404(Post, slug=slug, status='PB')
+    comments = post.comment_set.filter(active=True)
+    # total_comments = post.comments.count()
+    # new_comment = None
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.post = post
             new_comment.save()
-            return redirect('detail.html', post_id=post_id)
-    else:
-        form = CommentForm()
+            return redirect('post_detail', year=year, month=month, day=day, slug=slug)
 
-        post_tags_ids = post.tags.values_list('id', flat=True)
-        similar_posts = Post.objects.filter(tag__in=post_tags_ids)\
-                                            .exclude(id=post_id)\
-                                            .annotate(same_tags=Count('tags'))\
-                                            .order_by('-same_tags', 'published_at')[:4]
+    form = CommentForm()
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.objects.filter(tags__in=post_tags_ids).exclude(id=post.id) \
+                        .annotate(same_tags=Count('tags')) \
+                        .order_by('-same_tags', 'published_at')[:4]
 
-        context = {'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_posts}
-        return render(request, 'detail.html', context)
+    context = {'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_posts}
+    return render(request, 'detail.html', context)
+
 
 def contact(request):
     if request.method == 'POST':
@@ -61,22 +62,9 @@ def contact(request):
                 "Email: {}\n\n{}".format(email, comment),
                 "from@example.com",
                 [recipient_email],
-               fail_silently=False,
+                fail_silently=False,
             )
-        else:
-            form = ContactForm()
-
-        return render(request, 'contact.html', {'form': form})
-
-def post_comment(request, post_id):
-    post = get_object_or_404(Post, id=post_id, status='PB')
-    if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.save()
-            return redirect('detail.html')
     else:
-        form = CommentForm()
-    return render(request, 'comment.html', {'form': form})
+        form = ContactForm()
+
+    return render(request, 'contact.html', {'form': form})
