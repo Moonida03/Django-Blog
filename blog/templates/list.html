@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load blog_tags %}
 
 {% block title %}Posts{% endblock %}
 
@@ -8,6 +9,7 @@
 {% endif %}
 {% for post in posts %}
     <h2><a href="{{ post.get_absolute_url }}">{{ post.id }}</a></h2>
+    <p> {{ post.body|markdown|truncatewords_html:30 }} </p>
     {% comment %}
     <p class="tags">
         Tags:
