@@ -1,11 +1,13 @@
+from django.db.models.functions import Rank
 from django.shortcuts import render, HttpResponse, get_object_or_404, redirect
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import ListView
 from django.core.mail import send_mail
-from .forms import ContactForm, CommentForm
+from .forms import ContactForm, CommentForm, SearchForm
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 
 
 class PostListView(ListView):
@@ -69,4 +71,19 @@ def contact(request):
 
     return render(request, 'contact.html', {'form': form})
 
+
+def post_search(request):
+    forms = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
+            results = Post.published.annotate(
+                    rank=SearchRank(search_vector, search_query)
+            ).filter(rank__gte=0.3).order_by('-rank')
+    return render(request, 'search.html', {'forms': forms, 'query': query, 'results': results})
 
